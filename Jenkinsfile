@@ -24,7 +24,7 @@ pipeline {
         }
         stage('Checkout') {
             steps {
-                git 'git@github.com:sharetribe/ftw-daily.git'
+                git 'git@github.com:totuk2/ftw-daily.git'
             }
         }
         stage('Change Directory') {
