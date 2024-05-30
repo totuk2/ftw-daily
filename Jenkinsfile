@@ -3,20 +3,26 @@ pipeline {
 
     environment {
         NODE_ENV = 'production'
+        NVM_DIR = "${env.WORKSPACE}/.nvm"
     }
 
     stages {
         stage('Install Node.js and Yarn') {
             steps {
                 sh '''
-                    # Install Node.js
-                    curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
-                    apt-get install -y nodejs
+                    # Install nvm
+                    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
                     
+                    # Load nvm
+                    export NVM_DIR="$HOME/.nvm"
+                    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
+                    # Install Node.js
+                    nvm install 18
+                    nvm use 18
+
                     # Install Yarn
-                    curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
-                    echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
-                    apt-get update && apt-get install -y yarn
+                    npm install -g yarn
                 '''
             }
         }
@@ -37,21 +43,48 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 dir('ftw-daily') {
-                    sh 'yarn install'
+                    sh '''
+                        # Load nvm
+                        export NVM_DIR="$HOME/.nvm"
+                        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
+                        # Use Node.js
+                        nvm use 18
+                        
+                        yarn install
+                    '''
                 }
             }
         }
         stage('Add Env Vars to Config') {
             steps {
                 dir('ftw-daily') {
-                    sh 'yarn run config'
+                    sh '''
+                        # Load nvm
+                        export NVM_DIR="$HOME/.nvm"
+                        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
+                        # Use Node.js
+                        nvm use 18
+                        
+                        yarn run config
+                    '''
                 }
             }
         }
         stage('Start Dev Server') {
             steps {
                 dir('ftw-daily') {
-                    sh 'yarn run dev'
+                    sh '''
+                        # Load nvm
+                        export NVM_DIR="$HOME/.nvm"
+                        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
+                        # Use Node.js
+                        nvm use 18
+                        
+                        yarn run dev
+                    '''
                 }
             }
         }
