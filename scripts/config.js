@@ -1,4 +1,9 @@
-const inquirer = require('inquirer');
+import('inquirer').then((inquirer) => {
+    // Your code using inquirer goes here
+}).catch((err) => {
+    console.error('Failed to import inquirer:', err);
+});
+
 const fs = require('fs');
 const readline = require('readline');
 const chalk = require('chalk');
