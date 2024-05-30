@@ -1,4 +1,4 @@
-import inquirer from 'inquirer';
+const inquirer = require('inquirer');
 const fs = require('fs');
 const readline = require('readline');
 const chalk = require('chalk');
